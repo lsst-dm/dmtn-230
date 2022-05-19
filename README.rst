@@ -14,7 +14,9 @@ RSP HiPS service implementation strategy
 DMTN-230
 ========
 
-HiPS is an IVOA-standard protocol for providing a hierarchical, pre-rendered view of sky survey data. This document describes the implementation strategy for the Rubin Science Platform HiPS service.
+HiPS is an IVOA-standard protocol for providing a hierarchical, pre-rendered view of sky survey data.
+It is one of the ways in which Rubin Observatory will make available its survey data to data rights holders.
+This tech note describes the implementation strategy for the Rubin Science Platform HiPS service.
 
 **Links:**
 

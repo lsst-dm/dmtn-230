@@ -37,14 +37,16 @@ authors:
 copyright: "2022, Association of Universities for Research in Astronomy, Inc. (AURA)"
 
 # Description. A short, 1-2 sentence statemement used by document indices.
-description: "HiPS is an IVOA-standard protocol for providing a hierarchical, pre-rendered view of sky survey data. This document describes the implementation strategy for the Rubin Science Platform HiPS service."
+description: >
+  The implementation strategy for the Rubin Science Platform HiPS service.
 
 # Abstract, if available
-# abstract: >
-#           Write your paragraph
-#           here with multiple lines.
-#
-#           You can have multiple paragraphs too.
+abstract: >
+  HiPS is an IVOA-standard protocol for providing a hierarchical, pre-rendered
+  view of sky survey data.  It is one of the ways in which Rubin Observatory
+  will make available its survey data to data rights holders.  This tech note
+  describes the implementation strategy for the Rubin Science Platform HiPS
+  service.
 
 # URL where this document is published by Read the Docs. e.g. http://sqr-001.lsst.codes
 url: "https://dmtn-230.lsst.io"
