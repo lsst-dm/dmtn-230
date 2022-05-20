@@ -18,16 +18,27 @@ The HiPS naming structure is designed to allow one-time generation of a static, 
 Those files can be served by any static web server without requiring a web service.
 The client is responsible for providing any desired user interface and for choosing which images to retrieve, done via algorithmically constructing URLs under a base HiPS URL and then requesting the corresponding file from the server.
 
-Most HiPS data collections are public and therefore do not require authentication.
-However, for Rubin Observatory, the full HiPS data set will be available only to data rights holders and will therefore require authentication.
-
 We do not expect to frequently update the HiPS data set.
 Instead, during a data release, we will generate the HiPS data set for that release, and then serve that data set for users of that data release.
-In the future, we may want to multiple versions of the HiPS data set at different URLs, corresponding to different data releases.
-This is not part of the initial implementation, but can be easily added in the future.
 
-URL
-===
+Authentication
+==============
+
+Most HiPS data collections are public and therefore do not require authentication.
+However, for Rubin Observatory, the full HiPS data set for the most recent data release will be available only to data rights holders and will therefore require authentication.
+
+Older data releases are expected to become public over time and thus not require authentication.
+If that happens, we will serve those HiPS data sets directly from Google Cloud Storage as a public static web site, rather than using the techniques discussed below.
+Those public web sites will use separate domains per data set, following the long-term design discussed under :ref:`URLs <urls>`.
+
+It's also possible that Rubin Observatory will want to supply HiPS data down to a certain resolution without authentication, and require authentication for the higher-resolution images.
+If this becomes a requirement, we will satisfy that requirement by creating a separate HiPS data set for the public portion and serve it at a separate URL from the HiPS data set that requires authentication.
+The HiPS data set that does not require authentication would be served directly from Google Cloud Storage as described above.
+
+.. _urls:
+
+URLs
+====
 
 For DP0.2, we will use ``/api/hips`` as the root URL for the HiPS tree.
 
@@ -38,7 +49,10 @@ This allows isolation between services by moving them into separate trust domain
 
 Once that work is done, HiPS (like many other services) will move to its own domain.
 The long-term approach will require generating a separate authentication cookie specifically for HiPS (see :ref:`the Google Cloud Storage design <gcs-service>`), so that domain will not be shared with other services and will probably be something like ``hips.api.<domain>`` where ``<domain>`` is the parent domain of that deployment of the Rubin Science Platform (such as ``data.lsst.cloud``).
+
 At that time, we will also add a way of distinguishing between HiPS trees for different data releases, either by adding the data release to the domain or as a top-level path element in front of the HiPS path, whichever works best with the layout of the underlying storage and the capabilities of Google CDN.
+We will then serve each HiPS data set from separate URLs, using a similar configuration for each data set that requires authentication.
+This will also make it easier to remove the authentication requirement for the HiPS data set for older releases, when they become public.
 
 .. _storage:
 
