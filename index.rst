@@ -54,6 +54,29 @@ At that time, we will also add a way of distinguishing between HiPS trees for di
 We will then serve each HiPS data set from separate URLs, using a similar configuration for each data set that requires authentication.
 This will also make it easier to remove the authentication requirement for the HiPS data set for older releases, when they become public.
 
+HiPS list and registration
+==========================
+
+The HIPS standard has a somewhat confused concept of a "HIPS server," which publishes one or more HiPS surveys.
+Each HiPS server is supposed to publish a HiPS list, which provides metadata for all of the surveys published by that server.
+It's unclear how this is intended to interact with authentication, since HiPS surveys are normally public.
+
+There are two ways we can interpret this.
+One is to treat each published HiPS data set as a separate "HiPS server," since each will (in the long term) get its own FQDN.
+The HiPS ``properties`` file would then double as the HiPS list for that server.
+In this scheme, the HiPS list would be protected by the same authentication as the rest of the HiPS data set.
+Each HiPS data set would then be registered separately in the IVOA registry.
+Public HiPS data sets could be registered with public HiPS browsing services, but each would have to be registered separately.
+
+A better approach would be to publish a HiPS list for all published HiPS data sets at a separate URL.
+For example, if there were several ``hips-<release>.api.data.lsst.cloud`` HiPS data sets, we would publish the HiPS list at an address like ``https://api.data.lsst.cloud/hips``.
+This would be world-readable and would be registered in the IVOA registry for that deployment.
+The HiPS data sets that require authentication would be marked as private.
+That single HiPS list could then be registered with public HiPS browsing services, assuming they correctly understood that the private HiPS data sets would not be browsable without separate authentication.
+
+For DP0.2, we will not address this, and will not have an IVOA registry.
+In the future, we plan on taking the second approach, which will require writing a new (tiny) service to aggregate the properties of the HiPS data sets to construct the HiPS list.
+
 .. _storage:
 
 Storage
