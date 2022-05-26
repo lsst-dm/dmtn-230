@@ -29,14 +29,20 @@ help:
 	@echo "  refresh-bib  to update LSST bibliographies in lsstbib/"
 
 clean:
-	rm -rf $(BUILDDIR)/*
+	rm -rf $(BUILDDIR)/* _static/gcs.png _static/web-service.png
 
-html:
+_static/gcs.png:
+	python _static/gcs.py
+
+_static/web-service.png:
+	python _static/web-service.py
+
+html: _static/gcs.png _static/web-service.png
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
-epub:
+epub: _static/gcs.png _static/web-service.png
 	$(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $(BUILDDIR)/epub
 	@echo
 	@echo "Build finished. The epub file is in $(BUILDDIR)/epub."
@@ -46,7 +52,7 @@ changes:
 	@echo
 	@echo "The overview file is in $(BUILDDIR)/changes."
 
-linkcheck:
+linkcheck: _static/gcs.png _static/web-service.png
 	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
