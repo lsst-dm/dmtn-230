@@ -12,7 +12,7 @@ This tech note describes the implementation strategy for the Rubin Science Platf
 Overview
 ========
 
-A HiPS data set is a pre-generated tree of image files and accompanying metadata from a sky survey.
+A HiPS data set is a pre-generated tree of image files or other information from a sky survey.
 It is structured to support hierarchical exploration of data taken from a survey, often through panning and zooming via an interactive HiPS client such as `Aladin`_.
 The HiPS naming structure is designed to allow one-time generation of a static, read-only tree of files that provide the HiPS view of a survey.
 Those files can be served by any static web server without requiring a web service.
