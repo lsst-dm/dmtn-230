@@ -258,14 +258,14 @@ Top-level web page
 ==================
 
 It's conventional to provide an HTML page at the top level of a HiPS data set that summarizes, in a human-friendly way, information about that HiPS data set.
-For HiPS image data sets, Often that HTML page also embeds a JavaScript HiPS image browser.
-
-Unfortunately, the most commonly used JavaScript HiPS image browser (`Aladin Lite`_) does not support FITS images, and we do not plan to generate JPEG or PNG images for DP0.2.
+For HiPS image data sets, often that HTML page also embeds a JavaScript HiPS image browser such as `Aladin Lite`_.
 
 .. _Aladin Lite: https://aladin.cds.unistra.fr/AladinLite/doc/
 
-For the initial DP0.2 release, we will not generate a top-level ``index.html`` page and will instead rely on documentation for users to find the HiPS data sets with a HiPS browser of their choice.
-We expect to revisit this in future development, possibly by linking to or embedding a configuration of the Science Platform Portal configured to browse the HiPS data set.
+For the initial DP0.2 release, we will not generate a top-level ``index.html`` page.
+The expected initial use of HiPS is as context images for catalog and FITS image queries in the Science Platform Portal, rather than direct use via a HiPS browser.
+
+We expect to revisit this in future development, possibly by linking to or embedding the Science Platform Portal configured to browse the HiPS data set.
 
 References
 ==========
