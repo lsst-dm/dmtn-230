@@ -42,9 +42,24 @@ The HiPS data sets that do not require authentication would be served directly f
 URLs
 ====
 
-For DP0.2, there will be six HiPS data sets: one image data set for each filter band chosen from URGIZY.
-These will use the URLs ``/api/hips/images/band_[urgizy]`` at the domain of the Science Platform deployment (``data.lsst.cloud`` for DP0.2).
-We may, over the course of DP0.2, add a seventh image data set (possibly at ``/api/hips/images/color_gri``).
+For DP0.2, there are the following HiPS data sets:
+
+For each of the filter bands:
+
+#. band_u
+#. band_g
+#. band_r
+#. band_i
+#. band_z
+#. band_y
+
+And two mixed color datasets mixing the filter bands:
+
+#. color_gri
+#. color_riz
+
+To access these HiPS datasets, append the name of the dataset to ``/api/hips/images`` at the domain of the Science Platform deployment, ``https://data.lsst.cloud``.  We may, over the course of DP0.2, add additonal datasets under the same URL.
+
 The ``/images`` path component is in anticipation of possibly adding HiPS data sets of non-image survey data (such as catalogs) in the future.
 
 In the future, we will rework the URL structure for the Rubin Science Platform to use separate domains for separate aspects and services provided by the platform.
@@ -59,7 +74,7 @@ The domain will probably be something like ``hips.api.<domain>`` or ``hips-<rele
 At that time, we will also add a way of distinguishing between HiPS trees for different data releases, either by adding the data release to the domain or as a top-level path element in front of the HiPS path, whichever works best with the layout of the underlying storage and the capabilities of Google CDN.
 We will then serve the HiPS data sets for each data release from separate URLs, using a similar configuration for each data set that requires authentication.
 This will also make it easier to remove the authentication requirement for the HiPS data set for older releases, when they become public.
-The paths to the image HiPS data sets will then be ``/images/band_[urgizy]``, dropping ``/api/hips`` from the paths discussed above.
+The paths to the image HiPS data sets will then be ``/images/band_[ugrizy]`` or ``/images/color_[ugrizy]``, dropping ``/api/hips`` from the paths discussed above.
 
 HiPS list and registration
 ==========================
