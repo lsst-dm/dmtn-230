@@ -49,23 +49,10 @@ The HiPS data sets that do not require authentication would be served directly f
 URLs
 ====
 
-For DP0.2, there are the following HiPS data sets:
-
-For each of the filter bands:
-
-#. band_u
-#. band_g
-#. band_r
-#. band_i
-#. band_z
-#. band_y
-
-And two mixed color datasets mixing the filter bands:
-
-#. color_gri
-#. color_riz
-
-To access these HiPS datasets, append the name of the dataset to ``/api/hips/images`` at the domain of the Science Platform deployment, ``https://data.lsst.cloud``.  We may, over the course of DP0.2, add additonal datasets under the same URL.
+Initially, we only served data sets from one data release (DP0.2). These data sets were served at ``/api/hips/images`` at the domain of the Science Platform deployment, ``https://data.lsst.cloud``.
+To support more than one data release, there is a new endpoint ``/api/hips/v2/<release>/images``.
+To keep backwards compatibility, ``/api/hips/images`` still serves data sets from DP0.2.
+Consumers of that endpoint should be updated to use the v2 endpoint and explicitly specify a data release.
 
 The ``/images`` path component is in anticipation of possibly adding HiPS data sets of non-image survey data (such as catalogs) in the future.
 
@@ -78,10 +65,38 @@ Once that work is done, HiPS (like many other services) will move to its own dom
 The long-term approach will require generating a separate authentication cookie specifically for HiPS (see :ref:`the Google Cloud Storage design <gcs-service>`), so that domain will not be shared with other services.
 The domain will probably be something like ``hips.api.<domain>`` or ``hips-<release>.api.<domain>``, where ``<domain>`` is the parent domain of that deployment of the Rubin Science Platform (such as ``data.lsst.cloud``) and ``<release>`` is an identifier for a data release.
 
-At that time, we will also add a way of distinguishing between HiPS trees for different data releases, either by adding the data release to the domain or as a top-level path element in front of the HiPS path, whichever works best with the layout of the underlying storage and the capabilities of Google CDN.
+At that time, we may distinguish different data releases by adding the data release to the domain instead of using a path element in front of the HiPS path, whichever works best with the layout of the underlying storage and the capabilities of Google CDN.
 We will then serve the HiPS data sets for each data release from separate URLs, using a similar configuration for each data set that requires authentication.
 This will also make it easier to remove the authentication requirement for the HiPS data set for older releases, when they become public.
-The paths to the image HiPS data sets will then be ``/images/band_[ugrizy]`` or ``/images/color_[ugrizy]``, dropping ``/api/hips`` from the paths discussed above.
+The paths to the image HiPS data sets will then be ``/images/band_[ugrizy]`` or ``/images/color_[ugrizy]``, dropping ``/api/hips/v2/<release>`` from the paths discussed below.
+
+DP0.2
+-----
+
+For DP0.2, there are the following HiPS data sets:
+
+For each of the filter bands:
+
+#. band_u
+#. band_g
+#. band_r
+#. band_i
+#. band_z
+#. band_y
+
+And two mixed color data sets mixing the filter bands:
+
+#. color_gri
+#. color_riz
+
+To access these HiPS data sets, append the name of the data set to ``/api/hips/v2/dp02/images`` at the domain of the Science Platform deployment, ``https://data.lsst.cloud``.
+
+DP1
+---
+
+The data sets for DP1 are still being decided.
+They will be available at ``/api/hips/v2/dp1/images`` at the domain of the Science Platform deployment, ``https://data.lsst.cloud``.
+
 
 HiPS list and registration
 ==========================
@@ -92,7 +107,7 @@ It's unclear how this is intended to interact with authentication, since HiPS su
 
 There are two ways we can interpret this.
 One is to treat each published HiPS data set as a separate "HiPS server."
-The HiPS ``properties`` file at the root of that data set (at ``/api/hips/images/band_u`` for DP0.2, or ``/images/band_u`` in the long-term approach) would then double as the HiPS list for that "server."
+The HiPS ``properties`` file at the root of that data set (at ``/api/hips/v2/<release>/images/band_u``, or ``/images/band_u`` in the long-term approach) would then double as the HiPS list for that "server."
 In this scheme, the HiPS list would be protected by the same authentication as the rest of the HiPS data set.
 Each HiPS data set would then be registered separately in the IVOA registry.
 Public HiPS data sets could be registered with public HiPS browsing services, but each would have to be registered separately.
@@ -107,7 +122,7 @@ The HiPS data sets that require authentication would be marked as private.
 Alternately, or additionally, we could publish a cross-data-release HiPS list at an address like ``https://api.data.lsst.cloud/hips/list``, and register that in the IVOA registry.
 That single HiPS list could then be registered with public HiPS browsing services, assuming they correctly understood that the private HiPS data sets would not be browsable without separate authentication.
 
-For DP0.2, we will not not publish HiPS lists beyond the root-level ``properties`` file for each HiPS data set, and will not have an IVOA registry.
+For DP0.2 and DP1, we will not not publish HiPS lists beyond the root-level ``properties`` file for each HiPS data set, and will not have an IVOA registry.
 We will revisit this approach once we've implemented the change to Science Platform URLs discussed in :ref:`URLs <urls>`.
 
 .. _storage:
@@ -155,11 +170,11 @@ The drawback of this approach is that we must either use Google's ability to ser
 Web service
 ===========
 
-For the immediate requirement of a HiPS service for the DP0.2 data preview release, we will use a small `FastAPI <https://fastapi.tiangolo.com/>`__ web service that retrieves data from the Google Cloud Storage bucket.
+For the immediate requirement of a HiPS service for the DP0.2 and DP1 data preview releases, we will use a small `FastAPI <https://fastapi.tiangolo.com/>`__ web service that retrieves data from Google Cloud Storage buckets.
 In the longer term, we will switch to serving the HiPS data sets directly from Google Cloud Storage buckets, using helper code (probably via Cloud Run) to set up authentication credentials.
 
-For DP0.2, we will not provide directory listings of available files at each level of the HiPS tree, and instead rely on client construction of correct file names (as enabled by the HiPS standard).
-This will be added in post-DP0.2 development, most likely as part of moving to serving files directly from Google Cloud Storage buckets.
+For DP0.2 and DP1, we will not provide directory listings of available files at each level of the HiPS tree, and instead rely on client construction of correct file names (as enabled by the HiPS standard).
+This will be added in post-DP1 development, most likely as part of moving to serving files directly from Google Cloud Storage buckets.
 
 Options considered
 ------------------
@@ -224,7 +239,7 @@ On return from that redirect, it would set a signed cookie for the CDN.
 The load balancer would recognize that cookie and pass subsequent requests through to the CDN, which would verify the cookie and then serve files directly from Google Cloud Storage.
 
 We've not used this approach for the Science Platform before, and this login approach would benefit considerably from the multi-domain authentication approach proposed in `SQR-051`_ but not yet implemented.
-It's therefore not the most expedient choice to get a HiPS service up and running for DP0.2 and public testing.
+It's therefore not the most expedient choice to get a HiPS service up and running for DP0.2 and DP1 and public testing.
 
 This appears to be the best long-term approach, with the best security model and the smallest amount of ongoing code or service maintenance, but will require more work to implement.
 
@@ -232,7 +247,7 @@ Web service
 ^^^^^^^^^^^
 
 Writing a small web service to serve data from Google Cloud Storage is the simplest approach, since we have a well-tested development path for small web services and such a service can use the authentication and access control facilities provided by the Kubernetes ingress.
-This is the approach that we decided to take for the short-term DP0.2 requirement.
+This is the approach that we decided to take for the short-term DP0.2 and DP1 requirement.
 
 There are a few drawbacks to this approach.
 The first is performance: rather than serving the data through the highly-optimized and highly-efficient Google frontend, or even the less-optimized but still efficient NGINX static file service, every request will have to go through a Python layer.
@@ -272,7 +287,7 @@ Here is what this architecture looks like in diagram form.
 
 crawlspace tells clients (via the ``Cache-Control`` header) that all files can be cached for up to an hour.
 This is relatively short for testing purposes.
-We will likely increase that for the eventual DP0.2 service, since we expect HiPS files to be static once generated.
+We will likely increase that for the eventual DP0.2 and DP1 services, since we expect HiPS files to be static once generated.
 
 crawlspace attempts to support browser caching by passing through the ``Last-Modified`` and ``ETag`` headers from the underlying Google Cloud Storage blob metadata, and implementing support for ``If-None-Match`` to validate the cache after the object lifetime has expired.
 
@@ -284,7 +299,7 @@ For HiPS image data sets, often that HTML page also embeds a JavaScript HiPS ima
 
 .. _Aladin Lite: https://aladin.cds.unistra.fr/AladinLite/doc/
 
-For the initial DP0.2 release, we will not generate a top-level ``index.html`` page.
+For the initial DP0.2 and DP1 releases, we will not generate a top-level ``index.html`` page.
 The expected initial use of HiPS is as context images for catalog and FITS image queries in the Science Platform Portal, rather than direct use via a HiPS browser.
 
 We expect to revisit this in future development, possibly by linking to or embedding the Science Platform Portal configured to browse the HiPS data set.
