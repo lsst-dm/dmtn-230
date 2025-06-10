@@ -1,2 +1,6 @@
 _build/
+.technote/
+.tox/
+venv/
+.venv/
 _static/*.png

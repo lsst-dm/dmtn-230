@@ -1,6 +1,13 @@
-:tocdepth: 1
+########################################
+RSP HiPS service implementation strategy
+########################################
 
-.. sectnum::
+.. abstract::
+
+   The implementation strategy for the Rubin Science Platform HiPS service.
+
+
+
 
 Abstract
 ========
