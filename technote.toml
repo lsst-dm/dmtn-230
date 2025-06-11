@@ -10,6 +10,9 @@ license.id = "CC-BY-4.0"
 [[technote.authors]]
 name = {given = "Russ", family = "Allbery"}
 internal_id = "allberyr"
+[[technote.authors]]
+name = {given = "Dan", family = "Fuchs"}
+internal_id = "fuchsds"
 [[technote.authors.affiliations]]
 name = "Vera C. Rubin Observatory Project Office"
 internal_id = "RubinObs"
